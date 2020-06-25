@@ -1,17 +1,15 @@
 package ik.am.jpetstore.domain.service.order;
 
-import ik.am.jpetstore.domain.model.Order;
-
 import java.util.List;
+
+import ik.am.jpetstore.domain.model.Order;
 
 public interface OrderService {
 
-    void insertOrder(Order order);
+	int insertOrder(Order order);
 
-    Order getOrder(int orderId);
+	Order getOrder(int orderId);
 
-    List<Order> getOrdersByUsername(String username);
-
-    int getNextId(String name);
+	List<Order> getOrdersByUsername(String username);
 
 }

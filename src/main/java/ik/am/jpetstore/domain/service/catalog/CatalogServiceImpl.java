@@ -16,17 +16,16 @@
 
 package ik.am.jpetstore.domain.service.catalog;
 
+import java.util.List;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestTemplate;
+
 import ik.am.jpetstore.domain.model.Category;
 import ik.am.jpetstore.domain.model.Item;
 import ik.am.jpetstore.domain.model.Product;
-import ik.am.jpetstore.domain.repository.category.CategoryRepository;
-import ik.am.jpetstore.domain.repository.item.ItemRepository;
-import ik.am.jpetstore.domain.repository.product.ProductRepository;
-
-import java.util.List;
-
-import javax.inject.Inject;
-import org.springframework.stereotype.Service;
 
 /**
  * @author Eduardo Macarron
@@ -34,86 +33,53 @@ import org.springframework.stereotype.Service;
 @Service
 public class CatalogServiceImpl implements CatalogService {
 
-    @Inject
-    private CategoryRepository categoryRepository;
+	@Autowired
+	RestTemplate restTemplate;
 
-    @Inject
-    private ItemRepository itemRepository;
+	@Value("${product.service.url}")
+	private String PRODUCT_SERVICE_URL;
 
-    @Inject
-    private ProductRepository productRepository;
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Category> getCategoryList() {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/categories", List.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getCategoryList()
-     */
-    @Override
-    public List<Category> getCategoryList() {
-        return categoryRepository.getCategoryList();
-    }
+	@Override
+	public Category getCategory(String categoryId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/categories/" + categoryId, Category.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getCategory(java.lang.String)
-     */
-    @Override
-    public Category getCategory(String categoryId) {
-        return categoryRepository.getCategory(categoryId);
-    }
+	@Override
+	public Product getProduct(String productId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products/" + productId, Product.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getProduct(java.lang.String)
-     */
-    @Override
-    public Product getProduct(String productId) {
-        return productRepository.getProduct(productId);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> getProductListByCategory(String categoryId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/categories/" + categoryId + "/products", List.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getProductListByCategory(java.lang.String)
-     */
-    @Override
-    public List<Product> getProductListByCategory(String categoryId) {
-        return productRepository.getProductListByCategory(categoryId);
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Product> searchProductList(String keywords) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products?keywords=" + keywords, List.class);
+	}
 
-    // TODO enable using more than one keyword
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#searchProductList(java.lang.String)
-     */
-    @Override
-    public List<Product> searchProductList(String keyword) {
-        return productRepository.searchProductList("%" + keyword.toLowerCase()
-                + "%");
-    }
+	@SuppressWarnings("unchecked")
+	@Override
+	public List<Item> getItemListByProduct(String productId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/products/" + productId + "/items", List.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getItemListByProduct(java.lang.String)
-     */
-    @Override
-    public List<Item> getItemListByProduct(String productId) {
-        return itemRepository.getItemListByProduct(productId);
-    }
+	@Override
+	public Item getItem(String itemId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/items/" + itemId, Item.class);
+	}
 
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#getItem(java.lang.String)
-     */
-    @Override
-    public Item getItem(String itemId) {
-        return itemRepository.getItem(itemId);
-    }
-
-    /*
-     * (non-Javadoc)
-     * @see ik.am.jpetstore.domain.service.catalog.CategoryService#isItemInStock(java.lang.String)
-     */
-    @Override
-    public boolean isItemInStock(String itemId) {
-        return itemRepository.getInventoryQuantity(itemId) > 0;
-    }
+	@Override
+	public boolean isItemInStock(String itemId) {
+		return restTemplate.getForObject(PRODUCT_SERVICE_URL + "/items/" + itemId + "/instock", Boolean.class);
+	}
 }

@@ -13,10 +13,10 @@
         <tr>
             <td><a
                 href="${pageContext.request.contextPath}/order/viewOrder?orderId=${f:h(order.orderId)}">${f:h(order.orderId)}</a></td>
-            <td><fmt:formatDate value="${order.orderDate}"
-                    pattern="yyyy/MM/dd hh:mm:ss" /></td>
-            <td><fmt:formatNumber value="${f:h(order.totalPrice)}"
-                    pattern="$#,##0.00" /></td>
+            <td>${order.orderDate}<%-- <fmt:formatDate value="${order.orderDate}"
+                    pattern="yyyy/MM/dd hh:mm:ss" /> --%></td>
+            <td>${f:h(order.totalPrice)}<%-- <fmt:formatNumber value="${f:h(order.totalPrice)}"
+                    pattern="$#,##0.00" /> --%></td>
         </tr>
     </c:forEach>
 </table>
