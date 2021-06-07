@@ -699,7 +699,7 @@
         <org.hibernate.hibernate-validator.version>4.3.1.Final</org.hibernate.hibernate-validator.version>
         <!-- == Logging == -->
         <org.slf4j-version>1.7.5</org.slf4j-version>
-        <ch.qos.logback.version>1.0.13</ch.qos.logback.version>
+        <ch.qos.logback.version>1.2.0</ch.qos.logback.version>
         <org.lazyluke.version>0.2.6</org.lazyluke.version>
         <!-- == Spring Framework == -->
         <org.springframework-version>3.2.3.RELEASE</org.springframework-version>
